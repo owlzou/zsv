@@ -11,8 +11,8 @@ function createShader(gl, source, type) {
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.log(type, "complie failed.");
-    return null;
+    //console.log(type, "complie failed.");
+    throw `ShaderInfoLog: ${gl.getShaderInfoLog(shader)}`;
   }
   //console.log(`ShaderInfoLog: ${gl.getShaderInfoLog(shader)}`);
   return shader;
@@ -35,8 +35,8 @@ export function getProgram(gl, vsource, fsource) {
   gl.attachShader(shaderProgram, fragShader);
   gl.linkProgram(shaderProgram);
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    console.log("link program error:", gl.getProgramInfoLog(shaderProgram));
-    return null;
+    //console.log("link program error:", gl.getProgramInfoLog(shaderProgram));
+    throw `ProgramInfoLog: ${gl.getProgramInfoLog(shaderProgram)}`;
   }
   //console.log(`ProgramInfoLog: ${gl.getProgramInfoLog(shaderProgram)}`);
   return shaderProgram;

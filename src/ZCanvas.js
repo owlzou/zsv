@@ -1,54 +1,76 @@
-import React from "react";
+import React, {
+  useCallback,
+  useRef,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  useState,
+} from "react";
 import { draw } from "./utils/webgl.js";
+import imgph from "./assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
 
-class ZCanvas extends React.Component {
-  constructor(prop) {
-    super(prop);
-    this.canvas = React.createRef();
-    this.state = {
-      image: new Image(),
-      width: 0,
-      height: 0,
-    };
-  }
+function ZCanvas(props, ref) {
+  const canvasRef = useRef(null);
+  const [image, setImage] = useState(null);
 
-  componentDidMount() {
-    this.gl = this.canvas.current.getContext("webgl2");
-    this.loadImage(this.props.src);
-    this.props.onRef(this);
-  }
+  const loadImage = useCallback(
+    (src) => {
+      console.log("Load Image");
+      let img = new Image();
+      img.src = src || imgph;
+      img.onload = () => {
+        console.log("Image loaded");
+        canvasRef.current.width = img.width;
+        canvasRef.current.height = img.height;
+        const gl = canvasRef.current.getContext("webgl2");
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        setImage(img);
+      };
+    },
+    [canvasRef]
+  );
 
-  renderImage() {
-    draw(
-      this.gl,
-      this.props.vertexSource,
-      this.props.fragmentSource,
-      this.state.image
-    );
-  }
+  const load = (val) => {
+    switch (val) {
+      case "0":
+        break;
+      case "1":
+        loadImage(imgph);
+        break;
+      case "2":
+        break;
+      default:
+        loadImage(val);
+        break;
+    }
+  };
 
-  loadImage(src) {
-    console.log("Load Image");
-    let image = new Image();
-    image.src = src;
-    image.onload = () => {
-      console.log("Image loaded");
-      this.setState({ image: image, width: image.width, height: image.height });
-      this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-      draw(this.gl, this.props.vertexSource, this.props.fragmentSource, image);
-    };
-  }
+  useImperativeHandle(ref, () => ({
+    load,
+  }));
 
-  render() {
-    return (
-      <canvas
-        ref={this.canvas}
-        width={this.state.width}
-        height={this.state.height}
-        style={{ height: "50vh", width: "100%", objectFit: "contain" }}
-      ></canvas>
-    );
-  }
+  //当shader变化的时候，重新编译＆绘图
+  useEffect(() => {
+    try {
+      const gl = canvasRef.current.getContext("webgl2");
+      image && draw(gl, props.vertexSource, props.fragmentSource, image);
+      props.onError(null);
+    } catch (e) {
+      props.onError(e);
+    }
+  }, [props.vertexSource, props.fragmentSource, image, props]);
+
+  //初始化，加载图片
+  useEffect(() => {
+    loadImage(props.src);
+  }, [loadImage, props.src]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ height: "50vh", width: "100%", objectFit: "contain" }}
+    ></canvas>
+  );
 }
 
-export default ZCanvas;
+export default forwardRef(ZCanvas);

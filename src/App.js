@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Col,
   Row,
@@ -7,21 +7,19 @@ import {
   Text,
   Select,
   Divider,
-  Tag,
   useToasts,
+  Note,
 } from "@geist-ui/react";
-import { Play, Upload, Github } from "@geist-ui/react-icons";
+import { Upload, Github } from "@geist-ui/react-icons";
 import { preset } from "./utils/data.js";
 import ZCanvas from "./ZCanvas";
 import PresetModal from "./PresetModal";
 import Cmirror from "./Cmirror";
-import imgph from "./assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
 
 function Options(props) {
   const bgHandle = (val) => {
     let obj = { ...props.value, background: val };
-    val !== "2" && (obj.bgTitle = "");
-    val === "1" && props.onLoadImage(imgph);
+    props.onLoadImage(val);
     props.onChange(obj);
   };
   const uploadImage = () => {
@@ -33,7 +31,6 @@ function Options(props) {
         var reader = new FileReader();
         reader.onload = (event) => {
           props.onLoadImage(event.target.result);
-          props.onChange({ ...props.value, bgTitle: input.files[0].name });
         };
         reader.readAsDataURL(input.files[0]);
       }
@@ -44,7 +41,7 @@ function Options(props) {
   return (
     <form className="control">
       <Row>
-        <label>纹理</label>
+        <label>背景</label>
         <Select
           placeholder="选择背景"
           onChange={bgHandle}
@@ -59,122 +56,90 @@ function Options(props) {
             icon={<Upload />}
             type="secondary"
             onClick={uploadImage}
+            auto
           >
             上传图片
           </Button>
-        )}
-        {props.value.bgTitle.length > 0 && (
-          <Tag type="secondary">{props.value.bgTitle}</Tag>
         )}
       </Row>
     </form>
   );
 }
 
-class App extends React.Component {
-  constructor(prop) {
-    super(prop);
-    this.state = {
-      vertexSource: preset[0].vex,
-      fragmentSource: preset[0].frag,
-      form: { background: "1", bgTitle: "" },
-    };
-  }
+function App() {
+  const [vertexSource, setVertexSource] = useState(preset[0].vex);
+  const [fragmentSource, setFragmentSource] = useState(preset[0].frag);
+  const [error, setError] = useState(null);
+  const [form, setForm] = useState({ background: "1" });
+  const [toasts, setToast] = useToasts();
 
-  onRef = (ref) => {
-    this.canvas = ref;
-  };
+  const canvasRef = useRef();
 
-  onRunClick = () => {
-    try {
-      this.canvas.renderImage();
-    } catch (e) {
-      const [toasts, setToast] = useToasts();
-      const click = () => setToast({ text: e });
-    }
-  };
-
-  onPreset = (preset) => {
+  const onPreset = (preset) => {
     console.log(`Load preset ${preset.name}`);
-    this.setState(
-      (state) =>
-        Object.assign(state, {
-          vertexSource: preset.vex,
-          fragmentSource: preset.frag,
-        }),
-      () => this.onRunClick()
-    );
+    setVertexSource(preset.vex);
+    setFragmentSource(preset.frag);
   };
 
-  render() {
-    return (
-      <div className="App">
-        <div className="nav">
-          <div className="nav-left">
-            <Text h4 style={{ margin: "0" }}>
-              Z ShaderViewer
-            </Text>
-          </div>
-          <div className="nav-right">
-            <Button
-              icon={<Play />}
-              auto
-              type="secondary"
-              onClick={this.onRunClick}
-            >
-              运行
-            </Button>
-            <PresetModal onPreset={this.onPreset} />
-            <Button icon={<Github />} auto type="abort">
-              Github
-            </Button>
-          </div>
+  return (
+    <div className="App">
+      <div className="nav">
+        <div className="nav-left">
+          <Text h4 style={{ margin: "0" }}>
+            Z ShaderViewer
+          </Text>
         </div>
-        <Row gap={0.8} style={{ marginBottom: "15px" }}>
-          <Col>
-            <div style={{ textAlign: "center" }}>
-              <ZCanvas
-                onRef={this.onRef}
-                src={imgph}
-                vertexSource={this.state.vertexSource}
-                fragmentSource={this.state.fragmentSource}
-              ></ZCanvas>
-            </div>
-            <Divider />
-            <Options
-              value={this.state.form}
-              onChange={(obj) => {
-                this.setState((state) => Object.assign(state, { form: obj }));
-              }}
-              onLoadImage={(image) => {
-                this.canvas.loadImage(image);
-              }}
-            ></Options>
-          </Col>
-          <Col>
-            <Cmirror
-              title="顶点着色器"
-              value={this.state.vertexSource}
-              onChange={(code) => {
-                this.setState((state) =>
-                  Object.assign(state, { vertexSource: code })
-                );
-              }}
-            ></Cmirror>
-            <Cmirror
-              title="片段着色器"
-              value={this.state.fragmentSource}
-              onChange={(code) =>
-                this.setState((state) =>
-                  Object.assign(state, { fragmentSource: code })
-                )
-              }
-            ></Cmirror>
-          </Col>
-        </Row>
+        <div className="nav-right">
+          {error && (
+            <Note type="error" label="error">
+              {error}
+            </Note>
+          )}
+          <PresetModal onPreset={onPreset} />
+          <Button icon={<Github />} auto type="abort">
+            Github
+          </Button>
+        </div>
       </div>
-    );
-  }
+      <Row gap={0.8} style={{ marginBottom: "15px" }}>
+        <Col>
+          <div style={{ textAlign: "center" }}>
+            <ZCanvas
+              ref={canvasRef}
+              src={null}
+              vertexSource={vertexSource}
+              fragmentSource={fragmentSource}
+              onError={(e) => setError(e)}
+            ></ZCanvas>
+          </div>
+          <Divider />
+          <Options
+            value={form}
+            onChange={(obj) => {
+              setForm(obj);
+            }}
+            onLoadImage={(val) => {
+              canvasRef.current.load(val);
+            }}
+          ></Options>
+        </Col>
+        <Col>
+          <Cmirror
+            title="顶点着色器"
+            value={vertexSource}
+            onChange={(code) => {
+              setVertexSource(code);
+            }}
+          ></Cmirror>
+          <Cmirror
+            title="片段着色器"
+            value={fragmentSource}
+            onChange={(code) => setFragmentSource(code)}
+          ></Cmirror>
+        </Col>
+      </Row>
+    </div>
+  );
 }
 
 export default App;
