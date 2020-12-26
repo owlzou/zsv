@@ -28,6 +28,7 @@ export default function Cmirror(props) {
           props.onChange(value);
         }}
         options={options}
+        style={{height:"100%"}}
       ></CodeMirror>
     </Col>
   );

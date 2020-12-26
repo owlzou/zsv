@@ -1,9 +1,14 @@
 :root {
   --nav-height: 60px;
 }
-html {
+html,
+body {
   margin: 0;
   padding: 0;
+}
+
+body {
+  height: 100vh;
 }
 .nav {
   display: flex;
@@ -25,6 +30,7 @@ html {
 }
 .react-codemirror2 {
   flex-grow: 1;
+  height: 300px;
 }
 .CodeMirror {
   height: 100% !important;

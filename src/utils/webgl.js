@@ -115,7 +115,7 @@ export function bindTexture(gl, shaderProgram, image) {
 
 export function draw(gl, vertexSource, fragmentSource, image) {
   //正方形
-  const vertices = [-1, -1, -1, 1, 1, -1, 1, 1];
+  const vertices = [-1, -1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0];
   //纹理对应坐标
   const tex = [0, 1, 0, 0, 1, 1, 1, 0];
   gl.clearColor(0, 0, 0, 1);
@@ -123,8 +123,10 @@ export function draw(gl, vertexSource, fragmentSource, image) {
   //创建着色器
   const shaderProgram = getProgram(gl, vertexSource, fragmentSource);
   //设置缓冲
-  simpleBindBuffer(gl, shaderProgram, "aPosition", vertices, 2, 0, 0);
+  simpleBindBuffer(gl, shaderProgram, "aPosition", vertices, 3, 0, 0);
   simpleBindBuffer(gl, shaderProgram, "aTexCoord", tex, 2, 0, 0);
+  //未来添加其他可以绑定的参数也在这里：
+  //
   gl.useProgram(shaderProgram);
   bindTexture(gl, shaderProgram, image);
   //加载完纹理后再画图

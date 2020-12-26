@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import {
   Col,
   Row,
@@ -7,7 +7,7 @@ import {
   Text,
   Select,
   Divider,
-  useToasts,
+  Badge,
   Note,
 } from "@geist-ui/react";
 import { Upload, Github } from "@geist-ui/react-icons";
@@ -15,6 +15,7 @@ import { preset } from "./utils/data.js";
 import ZCanvas from "./ZCanvas";
 import PresetModal from "./PresetModal";
 import Cmirror from "./Cmirror";
+import VaribleModal from "./VaribleModal";
 
 function Options(props) {
   const bgHandle = (val) => {
@@ -71,8 +72,6 @@ function App() {
   const [fragmentSource, setFragmentSource] = useState(preset[0].frag);
   const [error, setError] = useState(null);
   const [form, setForm] = useState({ background: "1" });
-  const [toasts, setToast] = useToasts();
-
   const canvasRef = useRef();
 
   const onPreset = (preset) => {
@@ -88,13 +87,10 @@ function App() {
           <Text h4 style={{ margin: "0" }}>
             Z ShaderViewer
           </Text>
+          <Badge size="small">Beta</Badge> <Spacer y={0.5} />
         </div>
         <div className="nav-right">
-          {error && (
-            <Note type="error" label="error">
-              {error}
-            </Note>
-          )}
+          <VaribleModal />
           <PresetModal onPreset={onPreset} />
           <Button icon={<Github />} auto type="abort">
             Github
@@ -122,8 +118,18 @@ function App() {
               canvasRef.current.load(val);
             }}
           ></Options>
+          {error && (
+            <Note
+              type="error"
+              label="error"
+              className="control"
+              style={{ marginTop: "10px" }}
+            >
+              {error}
+            </Note>
+          )}
         </Col>
-        <Col>
+        <Col style={{ height: "100%" }}>
           <Cmirror
             title="顶点着色器"
             value={vertexSource}
