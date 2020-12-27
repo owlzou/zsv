@@ -84,10 +84,10 @@ function App() {
     <div className="App">
       <div className="nav">
         <div className="nav-left">
-          <Text h4 style={{ margin: "0" }}>
+          <Text h4 style={{ margin: "0", display: "inline-block",marginRight:"10px" }}>
             Z ShaderViewer
           </Text>
-          <Badge size="small">Beta</Badge> <Spacer y={0.5} />
+          <Badge size="small">Beta</Badge>
         </div>
         <div className="nav-right">
           <VaribleModal />
