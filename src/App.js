@@ -86,7 +86,7 @@ function App() {
     <div className="App">
       <div className="nav">
         <div className="nav-left">
-          <img src={logo} style={{marginRight:"10px",transform:"translateY(25%)"}}></img>
+          <img src={logo} style={{marginRight:"10px",transform:"translateY(25%)"}} alt="logo"></img>
           <Text
             h4
             style={{
