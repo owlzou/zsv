@@ -1,14 +1,15 @@
 import "./App.css";
 import React, { useRef, useState } from "react";
 import {
-  Col,
   Row,
   Button,
   Text,
   Select,
   Divider,
   Badge,
-  Note,
+  Grid,
+  Tabs,
+  Textarea,
 } from "@geist-ui/react";
 import { Upload, Github } from "@geist-ui/react-icons";
 import { preset } from "./utils/data.js";
@@ -16,6 +17,7 @@ import ZCanvas from "./ZCanvas";
 import PresetModal from "./PresetModal";
 import Cmirror from "./Cmirror";
 import VaribleModal from "./VaribleModal";
+import logo from "./assets/favicon-32x32.png";
 
 function Options(props) {
   const bgHandle = (val) => {
@@ -84,7 +86,15 @@ function App() {
     <div className="App">
       <div className="nav">
         <div className="nav-left">
-          <Text h4 style={{ margin: "0", display: "inline-block",marginRight:"10px" }}>
+          <img src={logo} style={{marginRight:"10px",transform:"translateY(25%)"}}></img>
+          <Text
+            h4
+            style={{
+              margin: "0",
+              display: "inline-block",
+              marginRight: "10px",
+            }}
+          >
             Z ShaderViewer
           </Text>
           <Badge size="small">Beta</Badge>
@@ -92,13 +102,20 @@ function App() {
         <div className="nav-right">
           <VaribleModal />
           <PresetModal onPreset={onPreset} />
-          <Button icon={<Github />} auto type="abort">
+          <Button
+            icon={<Github />}
+            auto
+            type="abort"
+            onClick={() => {
+              window.open("https://github.com/owlzou/zsv", "_blank");
+            }}
+          >
             Github
           </Button>
         </div>
       </div>
-      <Row gap={0.8} style={{ marginBottom: "15px" }}>
-        <Col>
+      <Grid.Container gap={2} style={{ padding: "0 20px" }}>
+        <Grid md={12} xs={24}>
           <div style={{ textAlign: "center" }}>
             <ZCanvas
               ref={canvasRef}
@@ -118,32 +135,34 @@ function App() {
               canvasRef.current.load(val);
             }}
           ></Options>
-          {error && (
-            <Note
-              type="error"
-              label="error"
-              className="control"
-              style={{ marginTop: "10px" }}
-            >
-              {error}
-            </Note>
-          )}
-        </Col>
-        <Col style={{ height: "100%" }}>
-          <Cmirror
-            title="顶点着色器"
-            value={vertexSource}
-            onChange={(code) => {
-              setVertexSource(code);
-            }}
-          ></Cmirror>
-          <Cmirror
-            title="片段着色器"
-            value={fragmentSource}
-            onChange={(code) => setFragmentSource(code)}
-          ></Cmirror>
-        </Col>
-      </Row>
+          <div className="control">
+            <Textarea
+              value={error ? error : ""}
+              width="100%"
+              minHeight="200px"
+              readOnly
+            ></Textarea>
+          </div>
+        </Grid>
+        <Grid xs={12}>
+          <Tabs initialValue="1">
+            <Tabs.Item label="顶点着色器" value="1">
+              <Cmirror
+                value={vertexSource}
+                onChange={(code) => {
+                  setVertexSource(code);
+                }}
+              ></Cmirror>
+            </Tabs.Item>
+            <Tabs.Item label="片段着色器" value="2">
+              <Cmirror
+                value={fragmentSource}
+                onChange={(code) => setFragmentSource(code)}
+              ></Cmirror>
+            </Tabs.Item>
+          </Tabs>
+        </Grid>
+      </Grid.Container>
     </div>
   );
 }

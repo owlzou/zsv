@@ -56,7 +56,8 @@ function ZCanvas(props, ref) {
       image && draw(gl, props.vertexSource, props.fragmentSource, image);
       props.onError(null);
     } catch (e) {
-      props.onError(e);
+      console.log(e.message)
+      props.onError(e.message);
     }
   }, [props.vertexSource, props.fragmentSource, image, props]);
 

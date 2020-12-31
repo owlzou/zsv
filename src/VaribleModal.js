@@ -1,33 +1,15 @@
 //显示支持的变量
 import { React, useState } from "react";
-import { Button, Modal, Table,Code } from "@geist-ui/react";
+import { Button, Modal, Table } from "@geist-ui/react";
 import { Lambda } from "@geist-ui/react-icons";
-
+import { note } from "./utils/data.js";
 function VaribleModal(props) {
   const [visible, setVisible] = useState(false);
   const closeHandler = (event) => {
     setVisible(false);
   };
-  const data = [
-    {
-      attribute: <Code>attribute</Code>,
-      type: "vec3",
-      name: "aPosition",
-      description: "输入坐标",
-    },
-    {
-      attribute: <Code>attribute</Code>,
-      type: "vec2",
-      name: "aTexCoord",
-      description: "顶点的纹理坐标",
-    },
-    {
-      attribute: <Code>uniform</Code>,
-      type: "sampler2D",
-      name: "uSampler",
-      description: "纹理数据",
-    },
-  ];
+  const data = note;
+
   return (
     <>
       <Button

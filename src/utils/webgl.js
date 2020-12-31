@@ -12,7 +12,7 @@ function createShader(gl, source, type) {
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     //console.log(type, "complie failed.");
-    throw new Error(`ShaderInfoLog: ${gl.getShaderInfoLog(shader)}`);
+    throw new Error(`ShaderInfoLog:\n${gl.getShaderInfoLog(shader)}`);
   }
   //console.log(`ShaderInfoLog: ${gl.getShaderInfoLog(shader)}`);
   return shader;
@@ -36,7 +36,7 @@ export function getProgram(gl, vsource, fsource) {
   gl.linkProgram(shaderProgram);
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
     //console.log("link program error:", gl.getProgramInfoLog(shaderProgram));
-    throw new Error(`ProgramInfoLog: ${gl.getProgramInfoLog(shaderProgram)}`);
+    throw new Error(`ProgramInfoLog:\n${gl.getProgramInfoLog(shaderProgram)}`);
   }
   //console.log(`ProgramInfoLog: ${gl.getProgramInfoLog(shaderProgram)}`);
   return shaderProgram;
@@ -126,6 +126,8 @@ export function draw(gl, vertexSource, fragmentSource, image) {
   simpleBindBuffer(gl, shaderProgram, "aPosition", vertices, 3, 0, 0);
   simpleBindBuffer(gl, shaderProgram, "aTexCoord", tex, 2, 0, 0);
   //未来添加其他可以绑定的参数也在这里：
+  // canvas 的大小
+  gl.uniform2f(gl.getUniformLocation(shaderProgram,"uScreenSize"), image.width,image.height);
   //
   gl.useProgram(shaderProgram);
   bindTexture(gl, shaderProgram, image);

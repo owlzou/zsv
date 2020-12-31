@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { Folder } from "@geist-ui/react-icons";
-import { Button, Modal } from "@geist-ui/react";
+import { Button, Modal,Grid } from "@geist-ui/react";
 import { preset } from "./utils/data.js";
 
 function PresetModal(props) {
@@ -18,22 +18,26 @@ function PresetModal(props) {
       >
         加载预设
       </Button>
-      <Modal open={visible} onClose={closeHandler}>
+      <Modal open={visible} onClose={closeHandler} width="30rem">
         <Modal.Title>选择预设</Modal.Title>
         <Modal.Content>
-          {preset.map((item, index) => {
-            return (
-              <Button
-                onClick={() => {
-                  props.onPreset(item);
-                  closeHandler();
-                }}
-                key={index}
-              >
-                {item.name}
-              </Button>
-            );
-          })}
+          <Grid.Container gap={2}>
+            {preset.map((item, index) => {
+              return (
+                <Grid key={index}>
+                  <Button
+                    onClick={() => {
+                      props.onPreset(item);
+                      closeHandler();
+                    }}
+                    key={index}
+                  >
+                    {item.name}
+                  </Button>
+                </Grid>
+              );
+            })}
+          </Grid.Container>
         </Modal.Content>
         <Modal.Action passive onClick={({ close }) => close()}>
           关闭
