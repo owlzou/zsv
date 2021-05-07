@@ -1,11 +1,21 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { Folder } from "@geist-ui/react-icons";
-import { Button, Modal,Grid } from "@geist-ui/react";
-import { preset } from "./utils/data.js";
+import { Button, Modal, Grid } from "@geist-ui/react";
+import { preset } from "../utils/data.js";
 
-function PresetModal(props) {
+export interface Preset {
+  name: string;
+  vex: string;
+  frag: string;
+}
+
+interface IPresetModal {
+  onPreset: (a: Preset) => void;
+}
+
+function PresetModal(props: IPresetModal) {
   const [visible, setVisible] = useState(false);
-  const closeHandler = (event) => {
+  const closeHandler = () => {
     setVisible(false);
   };
   return (

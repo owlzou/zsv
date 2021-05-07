@@ -4,16 +4,10 @@ import { Button, Text, Badge, Grid, Tabs, Textarea } from "@geist-ui/react";
 import { Github } from "@geist-ui/react-icons";
 import { preset } from "./utils/data.js";
 import ZCanvas from "./Components/ZCanvas";
-import PresetModal from "./PresetModal";
+import PresetModal, { Preset } from "./Components/PresetModal";
 import Cmirror from "./Components/Cmirror";
-import VaribleModal from "./VaribleModal";
+import VaribleModal from "./Components/VaribleModal";
 import logo from "./assets/favicon-32x32.png";
-
-interface Preset {
-  name: string;
-  vex: string;
-  frag: string;
-}
 
 type Error = string | undefined;
 
@@ -30,8 +24,12 @@ function App() {
 
   return (
     <div className="App">
-      <div className="nav">
-        <div className="nav-left">
+      <Grid.Container
+        gap={2}
+        alignContent="center"
+        style={{ padding: "0 32px", height: "60px" }}
+      >
+        <Grid sm={24} md={12}>
           <img
             src={logo}
             style={{ marginRight: "10px", transform: "translateY(25%)" }}
@@ -48,24 +46,26 @@ function App() {
             Z ShaderViewer
           </Text>
           <Badge size="small">Beta</Badge>
-        </div>
-        <div className="nav-right">
-          <VaribleModal />
-          <PresetModal onPreset={onPreset} />
-          <Button
-            icon={<Github />}
-            auto
-            type="abort"
-            onClick={() => {
-              window.open("https://github.com/owlzou/zsv", "_blank");
-            }}
-          >
-            Github
-          </Button>
-        </div>
-      </div>
+        </Grid>
+        <Grid sm={24} md={12}>
+          <div className="nav-right">
+            <VaribleModal />
+            <PresetModal onPreset={onPreset} />
+            <Button
+              icon={<Github />}
+              auto
+              type="abort"
+              onClick={() => {
+                window.open("https://github.com/owlzou/zsv", "_blank");
+              }}
+            >
+              Github
+            </Button>
+          </div>
+        </Grid>
+      </Grid.Container>
       <Grid.Container gap={2} style={{ padding: "0 20px" }}>
-        <Grid md={12} xs={24}>
+        <Grid sm={24} md={12}>
           <ZCanvas
             vertexSource={vertexSource}
             fragmentSource={fragmentSource}
@@ -81,7 +81,7 @@ function App() {
             ></Textarea>
           </div>
         </Grid>
-        <Grid xs={12}>
+        <Grid sm={24} md={12}>
           <Tabs initialValue="1">
             <Tabs.Item label="顶点着色器" value="1">
               <Cmirror

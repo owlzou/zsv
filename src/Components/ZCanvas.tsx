@@ -112,7 +112,9 @@ function ZCanvas(props: IZCanvas) {
   //当shader变化的时候，重新编译＆绘图
   useEffect(() => {
     try {
-      const gl = canvasRef!.current!.getContext("webgl2");
+      const gl = canvasRef!.current!.getContext("webgl2", {
+        preserveDrawingBuffer: true,
+      });
       image && draw(gl, props.vertexSource, props.fragmentSource, image);
       props.onError("");
     } catch (e) {

@@ -1,11 +1,12 @@
 //显示支持的变量
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { Button, Modal, Table } from "@geist-ui/react";
 import { Lambda } from "@geist-ui/react-icons";
-import { note } from "./utils/data.js";
-function VaribleModal(props) {
+import { note } from "../utils/data.js";
+
+function VaribleModal() {
   const [visible, setVisible] = useState(false);
-  const closeHandler = (event) => {
+  const closeHandler = () => {
     setVisible(false);
   };
   const data = note;

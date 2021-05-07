@@ -10,24 +10,25 @@ body {
 body {
   height: 100vh;
 }
-.nav {
+/* .nav {
   display: flex;
   align-items: center;
   height: var(--nav-height);
-}
+} */
 .nav-right {
-  position: absolute;
-  right: 16px;
+ /*  position: absolute;
+  right: 16px; */
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 .nav-right button {
   margin-right: 16px;
 }
-.nav-left {
+/* .nav-left {
   position: absolute;
   left: 32px;
-}
+} */
 .react-codemirror2 {
   height: 80vh;
 }
