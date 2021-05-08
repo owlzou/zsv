@@ -27,7 +27,7 @@ function App() {
       <Grid.Container
         gap={2}
         alignContent="center"
-        style={{ padding: "0 32px", height: "60px" }}
+        style={{ padding: "0 32px", height: "70px" }}
       >
         <Grid sm={24} md={12}>
           <img

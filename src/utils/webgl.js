@@ -125,11 +125,15 @@ export function draw(gl, vertexSource, fragmentSource, image) {
   //设置缓冲
   simpleBindBuffer(gl, shaderProgram, "aPosition", vertices, 3, 0, 0);
   simpleBindBuffer(gl, shaderProgram, "aTexCoord", tex, 2, 0, 0);
+  gl.useProgram(shaderProgram);
   //未来添加其他可以绑定的参数也在这里：
   // canvas 的大小
-  gl.uniform2f(gl.getUniformLocation(shaderProgram,"uScreenSize"), image.width,image.height);
+  gl.uniform2f(
+    gl.getUniformLocation(shaderProgram, "uScreenSize"),
+    parseFloat(image.width).toFixed(1),
+    parseFloat(image.height).toFixed(1)
+  );
   //
-  gl.useProgram(shaderProgram);
   bindTexture(gl, shaderProgram, image);
   //加载完纹理后再画图
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
