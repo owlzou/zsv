@@ -38,7 +38,7 @@ export const note = [
   {
     attribute: "uniform",
     type: "vec2",
-    name: <Code>uScreenSize</Code>,
-    description: "Canvas的大小",
+    name: <Code>uTextureSize</Code>,
+    description: "图片的大小",
   },
 ];
