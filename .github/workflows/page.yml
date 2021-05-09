@@ -9,16 +9,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Node
-        uses: actions/setup-node@v1
+      - uses: borales/actions-yarn@v2.0.0
         with:
-          node-version: "16.x"
-
-      - name: NPM install
-        run: npm install
-
-      - name: Build
-        run: npm run build
+          cmd: install # will run `yarn install` command
+          
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build # will run `yarn build` command
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
