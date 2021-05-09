@@ -130,8 +130,8 @@ export function draw(gl, vertexSource, fragmentSource, image) {
   // canvas 的大小
   gl.uniform2f(
     gl.getUniformLocation(shaderProgram, "uTextureSize"),
-    parseFloat(image.width).toFixed(1),
-    parseFloat(image.height).toFixed(1)
+    parseFloat(image.width),
+    parseFloat(image.height)
   );
   //
   bindTexture(gl, shaderProgram, image);

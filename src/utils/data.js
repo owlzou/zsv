@@ -14,6 +14,13 @@ export const preset = [
       "varying lowp vec2 vTexCoord;\nuniform sampler2D uSampler;\nvoid main(){\n    lowp vec4 color = texture2D(uSampler,vTexCoord);\n    lowp float gray = color[0]*0.3 + color[1]*0.59 + color[2]*0.11;\n    lowp vec4 new_color = vec4(gray,gray,gray,1);\n    gl_FragColor = new_color;\n}",
     name: "图片-灰度",
   },
+  {
+    vex:
+      "attribute vec3 aPosition;\nattribute vec2 aTexCoord;\nvarying lowp vec2 vTexCoord;\nvoid main(){\n    vTexCoord = aTexCoord;\n    gl_Position=vec4(aPosition,1.0);\n}",
+    frag:
+      "varying lowp vec2 vTexCoord;\nuniform sampler2D uSampler;\nuniform lowp vec2 uTextureSize;\n\nlowp vec4 getColor(lowp vec2 pos) {\n  // step(a,b) b>=a 返回1 否则为0\n  lowp float valid =\n      step(0.0, pos.x) * step(pos.x, 1.0) * step(0.0, pos.y) * step(pos.y, 1.0);\n  ; //如果合法返回1\n  return valid * texture2D(uSampler, pos) + vec4(.0, .0, .0, .0);\n}\n\nlowp vec4 getAdv(lowp float rad) {\n  lowp vec2 texel = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\n\n  lowp vec4 c1 = getColor(vTexCoord + texel * rad * vec2(-1, 1));\n  lowp vec4 c2 = getColor(vTexCoord + texel * rad * vec2(1, 1));\n  lowp vec4 c3 = getColor(vTexCoord + texel * rad * vec2(1, -1));\n  lowp vec4 c4 = getColor(vTexCoord + texel * rad * vec2(1, 1));\n\n  lowp vec4 color = c1 + c2 + c3 + c4;\n\n  return color * 0.25;\n}\n\nvoid main() {\n  // 模糊半径\n  lowp float rad = 4.0;\n  // 取特定点的颜色\n  gl_FragColor = getAdv(rad);\n}",
+    name: "均值模糊（测试）",
+  },
 ];
 
 export const note = [

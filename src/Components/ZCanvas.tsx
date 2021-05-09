@@ -129,7 +129,6 @@ function ZCanvas(props: IZCanvas) {
       <form className="control">
         <Row gap={0.8} style={{ flexWrap: "wrap" }}>
           <Text>背景</Text>
-
           <Select
             placeholder="选择背景"
             onChange={bgHandle}
@@ -138,7 +137,6 @@ function ZCanvas(props: IZCanvas) {
             <Select.Option value="Image">图片一</Select.Option>
             <Select.Option value="CustomImage">自定义图片</Select.Option>
           </Select>
-
           {form.background === BaseCanvas.CustomImage && (
             <>
               <Button
