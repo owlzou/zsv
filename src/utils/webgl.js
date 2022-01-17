@@ -11,10 +11,8 @@ function createShader(gl, source, type) {
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    //console.log(type, "complie failed.");
     throw new Error(`ShaderInfoLog:\n${gl.getShaderInfoLog(shader)}`);
   }
-  //console.log(`ShaderInfoLog: ${gl.getShaderInfoLog(shader)}`);
   return shader;
 }
 
@@ -35,10 +33,8 @@ export function getProgram(gl, vsource, fsource) {
   gl.attachShader(shaderProgram, fragShader);
   gl.linkProgram(shaderProgram);
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    //console.log("link program error:", gl.getProgramInfoLog(shaderProgram));
     throw new Error(`ProgramInfoLog:\n${gl.getProgramInfoLog(shaderProgram)}`);
   }
-  //console.log(`ProgramInfoLog: ${gl.getProgramInfoLog(shaderProgram)}`);
   return shaderProgram;
 }
 
@@ -113,7 +109,7 @@ export function bindTexture(gl, shaderProgram, image) {
   gl.uniform1i(gl.getUniformLocation(shaderProgram, "uSampler"), 0);
 }
 
-export function draw(gl, vertexSource, fragmentSource, image) {
+export function draw(gl, vertexSource, fragmentSource, image, uTime=0) {
   //正方形
   const vertices = [-1, -1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0];
   //纹理对应坐标
@@ -127,12 +123,14 @@ export function draw(gl, vertexSource, fragmentSource, image) {
   simpleBindBuffer(gl, shaderProgram, "aTexCoord", tex, 2, 0, 0);
   gl.useProgram(shaderProgram);
   //未来添加其他可以绑定的参数也在这里：
-  // canvas 的大小
+  // - canvas 的大小
   gl.uniform2f(
     gl.getUniformLocation(shaderProgram, "uTextureSize"),
     parseFloat(image.width),
     parseFloat(image.height)
   );
+  // - 运行时间
+  gl.uniform1f(gl.getUniformLocation(shaderProgram,"uTime"),uTime);
   //
   bindTexture(gl, shaderProgram, image);
   //加载完纹理后再画图

@@ -43,6 +43,7 @@ function ZCanvas(props: IZCanvas) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [form, setForm] = useState<IForm>({ background: BaseCanvas.Image });
+  const [time, setTime] = useState<number>(0);
 
   const loadImage = useCallback(
     (src: string | ArrayBuffer | null) => {
@@ -104,12 +105,23 @@ function ZCanvas(props: IZCanvas) {
       const gl = canvasRef!.current!.getContext("webgl2", {
         preserveDrawingBuffer: true,
       });
-      image && draw(gl, props.vertexSource, props.fragmentSource, image);
+      image && draw(gl, props.vertexSource, props.fragmentSource, image, time);
       props.onError("");
-    } catch (e) {
-      //console.log(e.message);
+    } catch (e: any) {
       props.onError(e.message);
     }
+  }, [image, props, time]); // time每秒都在变化，每秒更新一回
+
+  // 一个考虑，如果使用了 uTime 那么每秒都要刷新一回。
+  useEffect(() => {
+    const gap = 100;
+    const timer = setInterval(() => setTime(time + gap/1000), gap);
+    return () => clearInterval(timer);
+  }, [time]);
+
+  // 当图片、shader变化的时候重置时间
+  useEffect(() => {
+    setTime(0);
   }, [image, props]);
 
   //初始化
