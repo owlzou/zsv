@@ -44,6 +44,7 @@ function ZCanvas(props: IZCanvas) {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [form, setForm] = useState<IForm>({ background: BaseCanvas.Image });
   const [time, setTime] = useState<number>(0);
+  const [timer, setTimer] = useState<number | null>(null);
 
   const loadImage = useCallback(
     (src: string | ArrayBuffer | null) => {
@@ -106,23 +107,32 @@ function ZCanvas(props: IZCanvas) {
         preserveDrawingBuffer: true,
       });
       image && draw(gl, props.vertexSource, props.fragmentSource, image, time);
+
+      // 设置时间
+      const gap = 100.0;
+      if (props.fragmentSource.match(/uTime/g)) {
+        if (timer == null) {
+          setTime(0);
+          const newTimer = window.setInterval(
+            () => setTime(oldTime => oldTime + gap / 1000.0),
+            gap
+          );
+          setTimer(newTimer);
+        }
+      } else if (timer != null) {
+        window.clearInterval(timer);
+        setTimer(null);
+      }
+
       props.onError("");
     } catch (e: any) {
+      if (timer != null) {
+        window.clearInterval(timer);
+        setTimer(null);
+      }
       props.onError(e.message);
     }
-  }, [image, props, time]); // time每秒都在变化，每秒更新一回
-
-  // 一个考虑，如果使用了 uTime 那么每秒都要刷新一回。
-  useEffect(() => {
-    const gap = 100;
-    const timer = setInterval(() => setTime(time + gap/1000), gap);
-    return () => clearInterval(timer);
-  }, [time]);
-
-  // 当图片、shader变化的时候重置时间
-  useEffect(() => {
-    setTime(0);
-  }, [image, props]);
+  }, [image, props, time, timer]); // time每秒都在变化，每秒更新一回
 
   //初始化
   useEffect(() => {

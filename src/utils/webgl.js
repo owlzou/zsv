@@ -125,7 +125,7 @@ export function draw(gl, vertexSource, fragmentSource, image, uTime=0) {
   //未来添加其他可以绑定的参数也在这里：
   // - canvas 的大小
   gl.uniform2f(
-    gl.getUniformLocation(shaderProgram, "uTextureSize"),
+    gl.getUniformLocation(shaderProgram, "uResolution"),
     parseFloat(image.width),
     parseFloat(image.height)
   );
