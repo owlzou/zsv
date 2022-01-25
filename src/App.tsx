@@ -8,6 +8,7 @@ import PresetModal, { Preset } from "./Components/PresetModal";
 import Cmirror from "./Components/Cmirror";
 import VaribleModal from "./Components/VaribleModal";
 import logo from "./assets/favicon-32x32.png";
+import CreditModal from "./Components/CreditModal";
 
 type Error = string | undefined;
 
@@ -51,6 +52,7 @@ function App() {
           <div className="nav-right">
             <VaribleModal />
             <PresetModal onPreset={onPreset} />
+            <CreditModal />
             <Button
               icon={<Github />}
               auto
@@ -82,7 +84,7 @@ function App() {
           </div>
         </Grid>
         <Grid sm={24} md={12}>
-          <Tabs initialValue="1">
+          <Tabs initialValue="2">
             <Tabs.Item label="顶点着色器" value="1">
               <Cmirror
                 value={vertexSource}

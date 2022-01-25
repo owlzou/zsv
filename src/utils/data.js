@@ -18,7 +18,7 @@ export const preset = [
   },
   {
     vex: commonVex,
-    frag: "#ifdef GL_ES\nprecision mediump float;\n#endif\nuniform float uTime;\nuniform lowp vec2 uResolution;\n\nvec4 lerp(vec4 a, vec4 b, float c){\n    return a + (b-a)*c;\n}\n\nvoid main(){\n    vec2 step = gl_FragCoord.xy/uResolution.xy;\n    vec4 blue = vec4(.0,.0,1.,1.);\n    vec4 green = vec4(.0,1.,.0,1.);\n    gl_FragColor = lerp(blue,green,step.y+sin(uTime)*0.5);\n}",
+    frag: "#ifdef GL_ES\nprecision mediump float;\n#endif\nuniform float uTime;\nuniform lowp vec2 uResolution;\n\nvoid main(){\n    vec2 st = gl_FragCoord.xy/uResolution.xy;\n    gl_FragColor = vec4(abs(sin(uTime))*st.x,abs(cos(uTime))*st.y,1.0,1.0);\n}",
     name: "时间测试",
   },
 ];

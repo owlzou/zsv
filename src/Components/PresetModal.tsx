@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Folder } from "@geist-ui/react-icons";
 import { Button, Modal, Grid } from "@geist-ui/react";
 import { preset } from "../utils/data.js";

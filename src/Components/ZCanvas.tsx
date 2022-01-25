@@ -1,6 +1,7 @@
-import React, { useCallback, useRef, useEffect, useState } from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 import { draw } from "../utils/webgl.js";
-import imgph from "../assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
+import textureImage from "../assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
+import textureImage2 from "../assets/anh-nguyen-_Uqj5BQb-mw-unsplash.jpg";
 import { Upload, Download } from "@geist-ui/react-icons";
 import { Button, Row, Select, Divider, Text } from "@geist-ui/react";
 
@@ -14,35 +15,12 @@ interface IForm {
   background: BaseCanvas;
 }
 
-enum BaseCanvas {
-  Image,
-  CustomImage,
-}
-
-function str2BaseCanvas(val: string): BaseCanvas {
-  switch (val) {
-    case "Image":
-      return BaseCanvas.Image;
-    case "CustomImage":
-      return BaseCanvas.CustomImage;
-    default:
-      return BaseCanvas.Image;
-  }
-}
-
-function baseCanvas2str(val: BaseCanvas): string {
-  switch (val) {
-    case BaseCanvas.Image:
-      return "Image";
-    case BaseCanvas.CustomImage:
-      return "CustomImage";
-  }
-}
+type BaseCanvas = "Image" | "Image2" | "CustomImage";
 
 function ZCanvas(props: IZCanvas) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [form, setForm] = useState<IForm>({ background: BaseCanvas.Image });
+  const [form, setForm] = useState<IForm>({ background: "Image" });
   const [time, setTime] = useState<number>(0);
   const [timer, setTimer] = useState<number | null>(null);
 
@@ -53,7 +31,7 @@ function ZCanvas(props: IZCanvas) {
       }
       console.log("Load Image");
       let img = new Image();
-      img.src = src || imgph;
+      img.src = src || textureImage;
       img.onload = () => {
         console.log("Image loaded");
         canvasRef!.current!.width = img!.width;
@@ -68,8 +46,7 @@ function ZCanvas(props: IZCanvas) {
 
   const bgHandle = (val: String | string[]) => {
     if (typeof val == "string") {
-      let bc: BaseCanvas = str2BaseCanvas(val);
-      let obj = { ...form, background: bc };
+      let obj = { ...form, background: val as BaseCanvas };
       setForm(obj);
     }
   };
@@ -114,7 +91,7 @@ function ZCanvas(props: IZCanvas) {
         if (timer == null) {
           setTime(0);
           const newTimer = window.setInterval(
-            () => setTime(oldTime => oldTime + gap / 1000.0),
+            () => setTime((oldTime) => oldTime + gap / 1000.0),
             gap
           );
           setTimer(newTimer);
@@ -135,9 +112,22 @@ function ZCanvas(props: IZCanvas) {
   }, [image, props, time, timer]); // time每秒都在变化，每秒更新一回
 
   //初始化
+  // useEffect(() => {
+  //   loadImage(textureImage);
+  // }, [loadImage]);
+
   useEffect(() => {
-    loadImage(imgph);
-  }, [loadImage]);
+    switch (form.background) {
+      case "Image":
+        loadImage(textureImage);
+        break;
+      case "Image2":
+        loadImage(textureImage2);
+        break;
+      default:
+        break;
+    }
+  }, [form.background, loadImage]);
 
   return (
     <>
@@ -154,12 +144,13 @@ function ZCanvas(props: IZCanvas) {
           <Select
             placeholder="选择背景"
             onChange={bgHandle}
-            value={baseCanvas2str(form.background)}
+            value={form.background}
           >
             <Select.Option value="Image">图片一</Select.Option>
+            <Select.Option value="Image2">图片二</Select.Option>
             <Select.Option value="CustomImage">自定义图片</Select.Option>
           </Select>
-          {form.background === BaseCanvas.CustomImage && (
+          {form.background === "CustomImage" && (
             <>
               <Button
                 size="small"

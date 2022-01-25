@@ -1,5 +1,5 @@
 //显示支持的变量
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Modal, Table } from "@geist-ui/react";
 import { Lambda } from "@geist-ui/react-icons";
 import { note } from "../utils/data.js";
