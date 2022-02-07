@@ -79,7 +79,7 @@ function App() {
             <Textarea
               value={error ? error : ""}
               width="100%"
-              minHeight="200px"
+              minHeight="150px"
               readOnly
             ></Textarea>
           </div>

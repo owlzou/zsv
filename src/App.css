@@ -28,21 +28,21 @@ body {
 .control {
   margin: 0 auto;
   max-width: 700px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
-.control label {
-  margin-right: 10px;
-}
-.control > div {
-  align-items: baseline !important;
-}
-.control > div > * {
-  margin-left: 15px;
-}
-.row{
+
+.row {
   display: flex;
+}
+
+.row > * {
+  margin-right: 16px;
+}
+
+.baseline{
   align-items: baseline;
 }
-.row > *{
-  margin-right:16px;
+
+.center{
+  align-items: center;
 }

@@ -3,7 +3,7 @@ import { draw } from "../utils/webgl.js";
 import textureImage from "../assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
 import textureImage2 from "../assets/anh-nguyen-_Uqj5BQb-mw-unsplash.jpg";
 import { Upload, Download } from "@geist-ui/react-icons";
-import { Button, Row, Select, Divider, Text } from "@geist-ui/react";
+import { Button, Toggle, Select, Divider, Text } from "@geist-ui/react";
 
 interface IZCanvas {
   vertexSource: string;
@@ -23,6 +23,7 @@ function ZCanvas(props: IZCanvas) {
   const [form, setForm] = useState<IForm>({ background: "Image" });
   const [time, setTime] = useState<number>(0);
   const [timer, setTimer] = useState<number | null>(null);
+  const [autoRun, setAutoRun] = useState(true);
 
   const loadImage = useCallback(
     (src: string | ArrayBuffer | null) => {
@@ -80,6 +81,9 @@ function ZCanvas(props: IZCanvas) {
   //当shader变化的时候，重新编译＆绘图
   useEffect(() => {
     try {
+      if (!autoRun) {
+        return;
+      }
       const gl = canvasRef!.current!.getContext("webgl2", {
         preserveDrawingBuffer: true,
       });
@@ -109,12 +113,7 @@ function ZCanvas(props: IZCanvas) {
       }
       props.onError(e.message);
     }
-  }, [image, props, time, timer]); // time每秒都在变化，每秒更新一回
-
-  //初始化
-  // useEffect(() => {
-  //   loadImage(textureImage);
-  // }, [loadImage]);
+  }, [image, props, time, timer, autoRun]); // time每秒都在变化，每秒更新一回
 
   useEffect(() => {
     switch (form.background) {
@@ -139,7 +138,7 @@ function ZCanvas(props: IZCanvas) {
       </div>
       <Divider />
       <form className="control">
-        <div className="row">
+        <div className="row baseline">
           <Text>背景</Text>
           <Select
             placeholder="选择背景"
@@ -171,6 +170,13 @@ function ZCanvas(props: IZCanvas) {
               </Button>
             </>
           )}
+        </div>
+        <div className="row center">
+          <Text>自动编译</Text>
+          <Toggle
+            checked={autoRun}
+            onChange={(e) => setAutoRun(e.target.checked)}
+          />
         </div>
       </form>
     </>

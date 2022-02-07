@@ -24,7 +24,7 @@ function RGB2Vec() {
       out = rgb2vec(rgbInput);
     } catch (_e) {}
     setRgbOutput(out);
-  });
+  }, [rgbInput]);
 
   return (
     <Card>
