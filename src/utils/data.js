@@ -21,6 +21,11 @@ export const preset = [
     frag: "#ifdef GL_ES\nprecision mediump float;\n#endif\nuniform float uTime;\nuniform lowp vec2 uResolution;\n\nvoid main(){\n    vec2 st = gl_FragCoord.xy/uResolution.xy;\n    gl_FragColor = vec4(abs(sin(uTime))*st.x,abs(cos(uTime))*st.y,1.0,1.0);\n}",
     name: "时间测试",
   },
+  {
+    vex: commonVex,
+    frag: "#ifdef GL_ES\nprecision mediump float;\n#endif\nvarying lowp vec2 vTexCoord;\nuniform sampler2D uSampler;\nuniform vec2 uResolution;\nuniform float uTime;\n\nfloat random (in float x) {\n    return fract(sin(x)*1e4);\n}\n\nvoid main(){\n    float wave = 0.08; //偏移系数\n    vec2 grid = vec2(80,100);\n\n    vec2 st = vTexCoord * grid; //细分行数\n    vec2 ipos = floor(st); // 提取整数部分\n    \n    float dir = (mod(ipos.y,2.0)-0.5)*2.0; // 运动方向\n\n    float x = vTexCoord.x + random(ipos.y*uTime)*wave*dir; // 移动后的x\n	vec2 newCoord = vec2(x,vTexCoord.y);\n    vec4 color = texture2D(uSampler,newCoord);\n\n    // 添加一些扫描线色块\n    // color *= step(random(ipos.y*uTime),0.95);\n\n    // 添加左右偏移色块\n    color *= step(random(ipos.x+random(ipos.y*uTime)*dir*wave),0.95);\n  \n    gl_FragColor = color;\n}",
+    name: "故障图像",
+  },
 ];
 
 export const note = [

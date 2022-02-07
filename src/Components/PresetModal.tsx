@@ -49,7 +49,7 @@ function PresetModal(props: IPresetModal) {
             })}
           </Grid.Container>
         </Modal.Content>
-        <Modal.Action passive onClick={({ close }) => close()}>
+        <Modal.Action passive onClick={closeHandler}>
           关闭
         </Modal.Action>
       </Modal>

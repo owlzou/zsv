@@ -30,7 +30,7 @@ function VaribleModal() {
             <Table.Column prop="description" label="描述" />
           </Table>
         </Modal.Content>
-        <Modal.Action passive onClick={({ close }) => close()}>
+        <Modal.Action passive onClick={closeHandler}>
           关闭
         </Modal.Action>
       </Modal>

@@ -9,6 +9,7 @@ import Cmirror from "./Components/Cmirror";
 import VaribleModal from "./Components/VaribleModal";
 import logo from "./assets/favicon-32x32.png";
 import CreditModal from "./Components/CreditModal";
+import Tools from "./Components/Tools";
 
 type Error = string | undefined;
 
@@ -98,6 +99,9 @@ function App() {
                 value={fragmentSource}
                 onChange={(code: string) => setFragmentSource(code)}
               ></Cmirror>
+            </Tabs.Item>
+            <Tabs.Item label="工具" value="3">
+              <Tools/>
             </Tabs.Item>
           </Tabs>
         </Grid>

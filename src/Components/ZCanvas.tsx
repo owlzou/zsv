@@ -139,7 +139,7 @@ function ZCanvas(props: IZCanvas) {
       </div>
       <Divider />
       <form className="control">
-        <Row gap={0.8} style={{ flexWrap: "wrap" }}>
+        <div className="row">
           <Text>背景</Text>
           <Select
             placeholder="选择背景"
@@ -171,7 +171,7 @@ function ZCanvas(props: IZCanvas) {
               </Button>
             </>
           )}
-        </Row>
+        </div>
       </form>
     </>
   );

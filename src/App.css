@@ -10,14 +10,8 @@ body {
 body {
   height: 100vh;
 }
-/* .nav {
-  display: flex;
-  align-items: center;
-  height: var(--nav-height);
-} */
+
 .nav-right {
- /*  position: absolute;
-  right: 16px; */
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -25,10 +19,6 @@ body {
 .nav-right button {
   margin-right: 16px;
 }
-/* .nav-left {
-  position: absolute;
-  left: 32px;
-} */
 .react-codemirror2 {
   height: 80vh;
 }
@@ -48,4 +38,11 @@ body {
 }
 .control > div > * {
   margin-left: 15px;
+}
+.row{
+  display: flex;
+  align-items: baseline;
+}
+.row > *{
+  margin-right:16px;
 }
