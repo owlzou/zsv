@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input, Card, Text } from "@geist-ui/react";
+import { Input, Card, Text } from "@geist-ui/core";
 
 function rgb2vec(rgb: string) {
   const reg = /#?(?<R>[0-9a-f]{2})(?<G>[0-9a-f]{2})(?<B>[0-9a-f]{2})/g;
@@ -19,7 +19,7 @@ function RGB2Vec() {
   const [rgbOutput, setRgbOutput] = useState("");
 
   useEffect(() => {
-    let out = "-";
+    let out = "";
     try {
       out = rgb2vec(rgbInput);
     } catch (_e) {}
@@ -28,13 +28,14 @@ function RGB2Vec() {
 
   return (
     <Card>
-      <div className="row">
+      <div className="row baseline">
         <Text>RGB 转 vec3</Text>
         <Input
           value={rgbInput}
+          placeholder="#79FFE1"
           onChange={(e: any) => setRgbInput(e.target.value)}
         />
-        <Input readOnly value={rgbOutput} />
+        <Input readOnly value={rgbOutput} placeholder="(0.47,1.00,0.88)"/>
       </div>
     </Card>
   );

@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { Folder } from "@geist-ui/react-icons";
-import { Button, Modal, Grid } from "@geist-ui/react";
+import { Button, Modal, Grid } from "@geist-ui/core";
 import { preset } from "../utils/data.js";
 
 export interface Preset {
@@ -11,36 +9,29 @@ export interface Preset {
 
 interface IPresetModal {
   onPreset: (a: Preset) => void;
+  onClose: () => void;
+  visible:boolean;
 }
 
 function PresetModal(props: IPresetModal) {
-  const [visible, setVisible] = useState(false);
   const closeHandler = () => {
-    setVisible(false);
+    props.onClose()
   };
-  return (
-    <>
-      <Button
-        icon={<Folder />}
-        auto
-        type="abort"
-        onClick={() => setVisible(true)}
-      >
-        加载预设
-      </Button>
-      <Modal open={visible} onClose={closeHandler} width="30rem">
+  return (    
+      <Modal visible={props.visible} onClose={closeHandler} width="30rem">
         <Modal.Title>选择预设</Modal.Title>
         <Modal.Content>
           <Grid.Container gap={2}>
             {preset.map((item, index) => {
               return (
-                <Grid key={index}>
+                <Grid key={index} xs={12}>
                   <Button
                     onClick={() => {
                       props.onPreset(item);
                       closeHandler();
                     }}
                     key={index}
+                    style={{width:"100%"}}
                   >
                     {item.name}
                   </Button>
@@ -53,7 +44,6 @@ function PresetModal(props: IPresetModal) {
           关闭
         </Modal.Action>
       </Modal>
-    </>
   );
 }
 

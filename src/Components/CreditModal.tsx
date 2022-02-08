@@ -1,24 +1,13 @@
-import { useState } from "react";
-import { Info } from "@geist-ui/react-icons";
-import { Button, Modal } from "@geist-ui/react";
+import { Modal } from "@geist-ui/core";
 
-function CreditModal() {
-  const [visible, setVisible] = useState(false);
-  const closeHandler = () => {
-    setVisible(false);
-  };
+interface IModal {
+  visible:boolean;
+  onClose: () => void;
+}
 
+function CreditModal(props:IModal) {
   return (
-    <>
-      <Button
-        icon={<Info />}
-        auto
-        type="abort"
-        onClick={() => setVisible(true)}
-      >
-        关于
-      </Button>
-      <Modal open={visible} onClose={closeHandler} width="35rem">
+      <Modal visible={props.visible} onClose={props.onClose} width="35rem">
         <Modal.Content>
           <p>鸣谢：</p>
           <ul>
@@ -60,11 +49,10 @@ function CreditModal() {
             </li>
           </ul>
         </Modal.Content>
-        <Modal.Action passive onClick={closeHandler}>
+        <Modal.Action passive onClick={props.onClose}>
           关闭
         </Modal.Action>
       </Modal>
-    </>
   );
 }
 

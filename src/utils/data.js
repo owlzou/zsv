@@ -1,4 +1,4 @@
-import { Code } from "@geist-ui/react";
+import { Code } from "@geist-ui/core";
 const commonVex = "attribute vec3 aPosition;\nattribute vec2 aTexCoord;\nvarying lowp vec2 vTexCoord;\nvoid main(){\n    vTexCoord = aTexCoord;\n    gl_Position=vec4(aPosition,1.0);\n}"
 export const preset = [
   {

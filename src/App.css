@@ -11,20 +11,18 @@ body {
   height: 100vh;
 }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+.App {
+  padding: 16px 32px;
 }
-.nav-right button {
-  margin-right: 16px;
-}
+
 .react-codemirror2 {
   height: 80vh;
 }
+
 .CodeMirror {
   height: 100% !important;
 }
+
 .control {
   margin: 0 auto;
   max-width: 700px;
@@ -36,13 +34,13 @@ body {
 }
 
 .row > * {
-  margin-right: 16px;
+  margin-right: 16px !important
 }
 
-.baseline{
+.baseline {
   align-items: baseline;
 }
 
-.center{
+.center {
   align-items: center;
 }

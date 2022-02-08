@@ -2,13 +2,20 @@ import { useCallback, useRef, useEffect, useState } from "react";
 import { draw } from "../utils/webgl.js";
 import textureImage from "../assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
 import textureImage2 from "../assets/anh-nguyen-_Uqj5BQb-mw-unsplash.jpg";
-import { Upload, Download } from "@geist-ui/react-icons";
-import { Button, Toggle, Select, Divider, Text } from "@geist-ui/react";
+import { Upload, Download } from "@geist-ui/icons";
+import {
+  Button,
+  Toggle,
+  Select,
+  Divider,
+  Text,
+  Textarea,
+  Grid,
+} from "@geist-ui/core";
 
 interface IZCanvas {
   vertexSource: string;
   fragmentSource: string;
-  onError: (a: string | undefined) => void;
 }
 
 interface IForm {
@@ -16,6 +23,7 @@ interface IForm {
 }
 
 type BaseCanvas = "Image" | "Image2" | "CustomImage";
+type Error = string | undefined;
 
 function ZCanvas(props: IZCanvas) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -24,6 +32,7 @@ function ZCanvas(props: IZCanvas) {
   const [time, setTime] = useState<number>(0);
   const [timer, setTimer] = useState<number | null>(null);
   const [autoRun, setAutoRun] = useState(true);
+  const [error, setError] = useState<Error>(undefined);
 
   const loadImage = useCallback(
     (src: string | ArrayBuffer | null) => {
@@ -105,13 +114,13 @@ function ZCanvas(props: IZCanvas) {
         setTimer(null);
       }
 
-      props.onError("");
+      setError("");
     } catch (e: any) {
       if (timer != null) {
         window.clearInterval(timer);
         setTimer(null);
       }
-      props.onError(e.message);
+      setError(e.message);
     }
   }, [image, props, time, timer, autoRun]); // time每秒都在变化，每秒更新一回
 
@@ -129,7 +138,7 @@ function ZCanvas(props: IZCanvas) {
   }, [form.background, loadImage]);
 
   return (
-    <>
+    <Grid.Container direction="column">
       <div style={{ textAlign: "center" }}>
         <canvas
           ref={canvasRef}
@@ -137,7 +146,7 @@ function ZCanvas(props: IZCanvas) {
         ></canvas>
       </div>
       <Divider />
-      <form className="control">
+      <form>
         <div className="row baseline">
           <Text>背景</Text>
           <Select
@@ -152,7 +161,7 @@ function ZCanvas(props: IZCanvas) {
           {form.background === "CustomImage" && (
             <>
               <Button
-                size="small"
+                scale={0.8}
                 icon={<Upload />}
                 type="secondary"
                 onClick={uploadImage}
@@ -161,7 +170,7 @@ function ZCanvas(props: IZCanvas) {
                 上传图片
               </Button>
               <Button
-                size="small"
+                scale={0.8}
                 icon={<Download />}
                 onClick={downloadImage}
                 auto
@@ -178,8 +187,14 @@ function ZCanvas(props: IZCanvas) {
             onChange={(e) => setAutoRun(e.target.checked)}
           />
         </div>
+        <Textarea
+          value={error ? error : ""}
+          width="100%"
+          style={{ minHeight: "150px" }}
+          readOnly
+        ></Textarea>
       </form>
-    </>
+    </Grid.Container>
   );
 }
 
