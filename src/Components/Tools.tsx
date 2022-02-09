@@ -28,7 +28,7 @@ function RGB2Vec() {
 
   return (
     <Card>
-      <div className="row baseline">
+      <div className="row">
         <Text>RGB 转 vec3</Text>
         <Input
           value={rgbInput}

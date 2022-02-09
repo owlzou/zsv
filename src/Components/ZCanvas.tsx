@@ -147,7 +147,7 @@ function ZCanvas(props: IZCanvas) {
       </div>
       <Divider />
       <form>
-        <div className="row baseline">
+        <div className="row">
           <Text>背景</Text>
           <Select
             placeholder="选择背景"
@@ -180,7 +180,7 @@ function ZCanvas(props: IZCanvas) {
             </>
           )}
         </div>
-        <div className="row center">
+        <div className="row">
           <Text>自动编译</Text>
           <Toggle
             checked={autoRun}

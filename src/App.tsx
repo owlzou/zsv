@@ -8,8 +8,9 @@ import {
   Tabs,
   CssBaseline,
   GeistProvider,
+  Themes,
 } from "@geist-ui/core";
-import { Github, Folder, Info, Lambda } from "@geist-ui/icons";
+import { Github, Folder, Info, Lambda, Sun, Moon } from "@geist-ui/icons";
 import { preset } from "./utils/data.js";
 import ZCanvas from "./Components/ZCanvas";
 import PresetModal, { Preset } from "./Components/PresetModal";
@@ -26,6 +27,19 @@ function App() {
   const [presetModalVisible, setPresetModalVisible] = useState(false);
   const [creditModalVisible, setCreditModalVisible] = useState(false);
   const [varibleModalVisible, setVaribleModalVisible] = useState(false);
+  // Theme
+  const [themeType, setThemeType] = useState("light");
+
+  const switchThemes = () => {
+    setThemeType((last) => (last === "softDark" ? "light" : "softDark"));
+  };
+
+  const softDarkTheme = Themes.createFromDark({
+    type: "softDark",
+    palette: {
+      //todo
+    },
+  });
 
   const onPreset = (preset: Preset) => {
     console.log(`Load preset ${preset.name}`);
@@ -41,10 +55,20 @@ function App() {
           <Text h4 style={{ margin: "0" }}>
             Z ShaderViewer
           </Text>
-          <Badge scale={.8}>Beta</Badge>
+          <Badge scale={0.8}>Beta</Badge>
         </Badge.Anchor>
       </Grid>
       <Grid.Container justify="flex-end" alignContent="center" sm={24} md={12}>
+        <Grid>
+          <Button
+            icon={themeType === "light" ? <Sun /> : <Moon />}
+            auto
+            type="abort"
+            onClick={() => switchThemes()}
+          >
+            {themeType === "light" ? "白天" : "黑夜"}
+          </Button>
+        </Grid>
         <Grid>
           <Button
             icon={<Lambda />}
@@ -91,30 +115,8 @@ function App() {
     </Grid.Container>
   );
 
- /*  const ZTabs = () => (
-    <Tabs initialValue="2" style={{width:"100%"}}>
-      <Tabs.Item label="顶点着色器" value="1">
-        <Cmirror
-          value={vertexSource}
-          onChange={(code: string) => {
-            setVertexSource(code);
-          }}
-        ></Cmirror>
-      </Tabs.Item>
-      <Tabs.Item label="片段着色器" value="2">
-        <Cmirror
-          value={fragmentSource}
-          onChange={(code: string) => setFragmentSource(code)}
-        ></Cmirror>
-      </Tabs.Item>
-      <Tabs.Item label="工具" value="3">
-        <Tools />
-      </Tabs.Item>
-    </Tabs>
-  ); */
-
   return (
-    <GeistProvider>
+    <GeistProvider themes={[softDarkTheme]} themeType={themeType}>
       <CssBaseline />
       <div className="App">
         <Header />

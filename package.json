@@ -1,6 +1,7 @@
 {
   "name": "zshaderviewer",
   "version": "0.1.1",
+  "author": "owlzou",
   "private": true,
   "homepage": ".",
   "dependencies": {
