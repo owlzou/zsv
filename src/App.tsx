@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Text,
@@ -11,14 +11,18 @@ import {
   Themes,
 } from "@geist-ui/core";
 import { Github, Folder, Info, Lambda, Sun, Moon } from "@geist-ui/icons";
-import { preset } from "./utils/data.js";
-import ZCanvas from "./Components/ZCanvas";
-import PresetModal, { Preset } from "./Components/PresetModal";
 import Cmirror from "./Components/Cmirror";
-import VaribleModal from "./Components/VaribleModal";
+//
 import logo from "./assets/favicon-32x32.png";
-import CreditModal from "./Components/CreditModal";
+import { preset } from "./utils/data.js";
+//
+import ZCanvas from "./Components/ZCanvas";
 import Tools from "./Components/Tools";
+import Settings, { defaultSettings } from "./Components/Settings";
+// Modals
+import PresetModal, { Preset } from "./Components/PresetModal";
+import VaribleModal from "./Components/VaribleModal";
+import CreditModal from "./Components/CreditModal";
 
 function App() {
   const [vertexSource, setVertexSource] = useState(preset[0].vex);
@@ -28,10 +32,25 @@ function App() {
   const [creditModalVisible, setCreditModalVisible] = useState(false);
   const [varibleModalVisible, setVaribleModalVisible] = useState(false);
   // Theme
-  const [themeType, setThemeType] = useState("light");
+  // const [themeType, setThemeType] = useState("light");
+  const [settings, setSettings] = useState(defaultSettings);
+
+  // init
+  useEffect(() => {
+    const storage = window.localStorage;
+    try {
+      setSettings(JSON.parse(storage["settings"]));
+    } catch (_e) {}
+  }, []);
 
   const switchThemes = () => {
-    setThemeType((last) => (last === "softDark" ? "light" : "softDark"));
+    const news = {
+      ...settings,
+      theme: settings.theme === "softDark" ? "light" : "softDark",
+    };
+    setSettings(news);
+    const storage = window.localStorage;
+    storage["settings"] = JSON.stringify(news);
   };
 
   const softDarkTheme = Themes.createFromDark({
@@ -61,12 +80,12 @@ function App() {
       <Grid.Container justify="flex-end" alignContent="center" sm={24} md={12}>
         <Grid>
           <Button
-            icon={themeType === "light" ? <Sun /> : <Moon />}
+            icon={settings.theme === "light" ? <Sun /> : <Moon />}
             auto
             type="abort"
             onClick={() => switchThemes()}
           >
-            {themeType === "light" ? "白天" : "黑夜"}
+            {settings.theme === "light" ? "白天" : "黑夜"}
           </Button>
         </Grid>
         <Grid>
@@ -116,7 +135,7 @@ function App() {
   );
 
   return (
-    <GeistProvider themes={[softDarkTheme]} themeType={themeType}>
+    <GeistProvider themes={[softDarkTheme]} themeType={settings.theme}>
       <CssBaseline />
       <div className="App">
         <Header />
@@ -128,10 +147,15 @@ function App() {
             ></ZCanvas>
           </Grid>
           <Grid sm={24} md={12}>
+            <link
+              rel="stylesheet"
+              href={`https://unpkg.com/codemirror@5.59.0/theme/${settings.cmTheme}.css`}
+            />
             <Tabs initialValue="2" style={{ width: "100%" }}>
               <Tabs.Item label="顶点着色器" value="1">
                 <Cmirror
                   value={vertexSource}
+                  theme={settings.cmTheme}
                   onChange={(code: string) => {
                     setVertexSource(code);
                   }}
@@ -140,11 +164,22 @@ function App() {
               <Tabs.Item label="片段着色器" value="2">
                 <Cmirror
                   value={fragmentSource}
+                  theme={settings.cmTheme}
                   onChange={(code: string) => setFragmentSource(code)}
                 ></Cmirror>
               </Tabs.Item>
               <Tabs.Item label="工具" value="3">
                 <Tools />
+              </Tabs.Item>
+              <Tabs.Item label="设置" value="4">
+                <Settings
+                  prop={settings}
+                  onChange={(val) => {
+                    const storage = window.localStorage;
+                    storage["settings"] = JSON.stringify(val);
+                    setSettings(val);
+                  }}
+                />
               </Tabs.Item>
             </Tabs>
           </Grid>

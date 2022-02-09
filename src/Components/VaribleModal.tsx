@@ -1,5 +1,5 @@
 //显示支持的变量
-import { Modal, Table } from "@geist-ui/core";
+import { Modal, Table, Code } from "@geist-ui/core";
 import { note } from "../utils/data.js";
 
 interface IModal {
@@ -7,11 +7,11 @@ interface IModal {
   onClose: () => void;
 }
 
-function VaribleModal(props:IModal) {
+function VaribleModal(props: IModal) {
   const closeHandler = () => {
-    props.onClose()
+    props.onClose();
   };
-  const data = note;
+  const data = note.map((val) => ({ ...val, name: <Code>{val.name}</Code> }));
 
   return (
     <Modal visible={props.visible} onClose={closeHandler} width="35rem">

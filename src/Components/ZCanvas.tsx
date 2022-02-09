@@ -181,7 +181,7 @@ function ZCanvas(props: IZCanvas) {
           )}
         </div>
         <div className="row">
-          <Text>自动编译</Text>
+          <Text>自动运行</Text>
           <Toggle
             checked={autoRun}
             onChange={(e) => setAutoRun(e.target.checked)}

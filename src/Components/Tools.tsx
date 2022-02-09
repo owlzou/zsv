@@ -27,22 +27,24 @@ function RGB2Vec() {
   }, [rgbInput]);
 
   return (
-    <Card>
-      <div className="row">
-        <Text>RGB 转 vec3</Text>
-        <Input
-          value={rgbInput}
-          placeholder="#79FFE1"
-          onChange={(e: any) => setRgbInput(e.target.value)}
-        />
-        <Input readOnly value={rgbOutput} placeholder="(0.47,1.00,0.88)"/>
-      </div>
-    </Card>
+    <div className="row">
+      <Text>RGB 转 vec3</Text>
+      <Input
+        value={rgbInput}
+        placeholder="#79FFE1"
+        onChange={(e: any) => setRgbInput(e.target.value)}
+      />
+      <Input readOnly value={rgbOutput} placeholder="(0.47,1.00,0.88)" />
+    </div>
   );
 }
 
 function Tools() {
-  return <RGB2Vec />;
+  return (
+    <Card>
+      <RGB2Vec />
+    </Card>
+  );
 }
 
 export default Tools;
