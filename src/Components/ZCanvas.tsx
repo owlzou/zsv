@@ -29,10 +29,10 @@ function ZCanvas(props: IZCanvas) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [form, setForm] = useState<IForm>({ background: "Image" });
-  const [time, setTime] = useState<number>(0);
-  const [timer, setTimer] = useState<number | null>(null);
-  const [autoRun, setAutoRun] = useState(true);
+  const [autoRun, setAutoRun] = useState(false); // auto play animation
   const [error, setError] = useState<Error>(undefined);
+  const gl = useRef<WebGL2RenderingContext | null>(null);
+  const animRef = useRef<number | null>(null);
 
   const loadImage = useCallback(
     (src: string | ArrayBuffer | null) => {
@@ -87,42 +87,51 @@ function ZCanvas(props: IZCanvas) {
     a.remove();
   };
 
-  //当shader变化的时候，重新编译＆绘图
+  // callback 里的值本身会被缓存（闭包）
+  // 如果在 callback 里改变 state 值不会反映在递归的 callback 里（会反映在外面的 useEffect 里，ref 没有这个限制
+  // 所以 autoRun 的值在递归里不会变，取消动画搬到了 useEffect 中
+  const anim = useCallback(
+    (time: number = 0) => {
+      try {
+        draw(gl.current, props.vertexSource, props.fragmentSource, image, time);
+        setError("");
+      } catch (e: any) {
+        setError(e.message);
+        animRef.current = null;
+      }
+      if (animRef.current) {
+        animRef.current = window.requestAnimationFrame(anim);
+      }
+    },
+    [props.vertexSource, props.fragmentSource, image]
+  );
+
+  // init
   useEffect(() => {
-    try {
-      if (!autoRun) {
-        return;
-      }
-      const gl = canvasRef!.current!.getContext("webgl2", {
-        preserveDrawingBuffer: true,
-      });
-      image && draw(gl, props.vertexSource, props.fragmentSource, image, time);
+    gl.current = canvasRef!.current!.getContext("webgl2", {
+      preserveDrawingBuffer: true,
+    });
+  }, []);
 
-      // 设置时间
-      const gap = 100.0;
-      if (props.fragmentSource.match(/uTime/g)) {
-        if (timer == null) {
-          setTime(0);
-          const newTimer = window.setInterval(
-            () => setTime((oldTime) => oldTime + gap / 1000.0),
-            gap
-          );
-          setTimer(newTimer);
-        }
-      } else if (timer != null) {
-        window.clearInterval(timer);
-        setTimer(null);
+  useEffect(() => {
+    if (autoRun) {
+      if (animRef.current == null) {
+        console.log("Start Animation");
+        animRef.current = window.requestAnimationFrame(anim);
+      } else {
+        console.log(`Cancel animation: ${animRef.current}, rebuild ...`);
+        window.cancelAnimationFrame(animRef.current);
+        animRef.current = window.requestAnimationFrame(anim);
       }
-
-      setError("");
-    } catch (e: any) {
-      if (timer != null) {
-        window.clearInterval(timer);
-        setTimer(null);
+    } else if (!autoRun) {
+      anim();
+      if (animRef.current !== null) {
+        console.log("Cancel animation: " + animRef.current);
+        window.cancelAnimationFrame(animRef.current);
+        animRef.current = null;
       }
-      setError(e.message);
     }
-  }, [image, props, time, timer, autoRun]); // time每秒都在变化，每秒更新一回
+  }, [anim, autoRun]);
 
   useEffect(() => {
     switch (form.background) {
@@ -181,7 +190,7 @@ function ZCanvas(props: IZCanvas) {
           )}
         </div>
         <div className="row">
-          <Text>自动运行</Text>
+          <Text>运行动画</Text>
           <Toggle
             checked={autoRun}
             onChange={(e) => setAutoRun(e.target.checked)}

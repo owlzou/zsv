@@ -109,7 +109,7 @@ export function bindTexture(gl, shaderProgram, image) {
   gl.uniform1i(gl.getUniformLocation(shaderProgram, "uSampler"), 0);
 }
 
-export function draw(gl, vertexSource, fragmentSource, image, uTime=0) {
+export function draw(gl, vertexSource, fragmentSource, image, uTime = 0) {
   //正方形
   const vertices = [-1, -1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0];
   //纹理对应坐标
@@ -130,9 +130,7 @@ export function draw(gl, vertexSource, fragmentSource, image, uTime=0) {
     parseFloat(image.height)
   );
   // - 运行时间
-  gl.uniform1f(gl.getUniformLocation(shaderProgram,"uTime"),uTime);
-  //
+  gl.uniform1f(gl.getUniformLocation(shaderProgram, "uTime"), uTime / 1000);
   bindTexture(gl, shaderProgram, image);
-  //加载完纹理后再画图
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
