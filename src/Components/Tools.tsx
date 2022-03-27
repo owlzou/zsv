@@ -28,7 +28,7 @@ function RGB2Vec() {
 
   return (
     <div className="row">
-      <Text>RGB 转 vec3</Text>
+      <Text>HEX 转 vec3</Text>
       <Input
         value={rgbInput}
         placeholder="#79FFE1"

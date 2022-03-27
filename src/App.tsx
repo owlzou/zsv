@@ -25,8 +25,8 @@ import VaribleModal from "./Components/VaribleModal";
 import CreditModal from "./Components/CreditModal";
 
 function App() {
-  const [vertexSource, setVertexSource] = useState(preset[0].vex);
-  const [fragmentSource, setFragmentSource] = useState(preset[0].frag);
+  const [vertexSource, setVertexSource] = useState("");
+  const [fragmentSource, setFragmentSource] = useState("");
   // Modal
   const [presetModalVisible, setPresetModalVisible] = useState(false);
   const [creditModalVisible, setCreditModalVisible] = useState(false);
@@ -41,6 +41,7 @@ function App() {
     try {
       setSettings(JSON.parse(storage["settings"]));
     } catch (_e) {}
+    onPreset(preset[0]);
   }, []);
 
   const switchThemes = () => {
@@ -60,10 +61,12 @@ function App() {
     },
   });
 
-  const onPreset = (preset: Preset) => {
+  const onPreset = async (preset: Preset) => {
     console.log(`Load preset ${preset.name}`);
-    setVertexSource(preset.vex);
-    setFragmentSource(preset.frag);
+    const vex = await (await fetch(`./shaders/${preset.vex}`)).text();
+    const frag = await (await fetch(`./shaders/${preset.frag}`)).text();
+    setVertexSource(vex);
+    setFragmentSource(frag);
   };
 
   const Header = () => (
