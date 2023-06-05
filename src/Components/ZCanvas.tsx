@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect, useState } from "react";
 import { draw } from "../Utils/webgl.js";
-import textureImage from "../assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
-import textureImage2 from "../assets/anh-nguyen-_Uqj5BQb-mw-unsplash.jpg";
+import textureImage from "../Assets/jessica-pamp-sGRMspZmfPE-unsplash.jpg";
+import textureImage2 from "../Assets/anh-nguyen-_Uqj5BQb-mw-unsplash.jpg";
 import { Upload, Download } from "@geist-ui/icons";
 import {
   Button,
@@ -27,10 +27,12 @@ type Error = string | undefined;
 
 function ZCanvas(props: IZCanvas) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasWrapperRef = useRef<HTMLDivElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [form, setForm] = useState<IForm>({ background: "Image" });
   const [autoRun, setAutoRun] = useState(false); // auto play animation
   const [error, setError] = useState<Error>(undefined);
+  const [clickPosition, setClickPosition] = useState<Number[]>([0.5, 0.5]);
   const gl = useRef<WebGL2RenderingContext | null>(null);
   const animRef = useRef<number | null>(null);
 
@@ -44,14 +46,24 @@ function ZCanvas(props: IZCanvas) {
       img.src = src || textureImage;
       img.onload = () => {
         console.log("Image loaded");
-        canvasRef!.current!.width = img!.width;
-        canvasRef!.current!.height = img!.height;
-        const gl = canvasRef!.current!.getContext("webgl2")!;
+        const c = canvasRef!.current!;
+        const cw = canvasWrapperRef!.current!;
+        if (cw.clientWidth >= img!.width && cw.clientHeight >= img!.height) {
+          c.width = img!.width;
+          c.height = img!.height;
+        } else if (cw.clientHeight/cw.clientWidth < img!.height/img!.width) {
+          c.height = cw.clientHeight;
+          c.width = img!.width / img!.height * cw.clientHeight;
+        } else {
+          c.width = cw.clientWidth;
+          c.height = img!.height / img!.width * cw.clientWidth;
+        }
+        const gl = c.getContext("webgl2")!;
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         setImage(img);
       };
     },
-    [canvasRef]
+    [canvasRef, canvasWrapperRef]
   );
 
   const bgHandle = (val: String | string[]) => {
@@ -87,13 +99,21 @@ function ZCanvas(props: IZCanvas) {
     a.remove();
   };
 
+  const onCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const position = [(e.clientX - rect.left) / canvasRef.current!.clientWidth, (e.pageY - rect.top) / canvasRef.current!.clientHeight]
+    setClickPosition(position)
+    console.log(`click canvas:(${position})`)
+  }
+
+
   // callback 里的值本身会被缓存（闭包）
   // 如果在 callback 里改变 state 值不会反映在递归的 callback 里（会反映在外面的 useEffect 里，ref 没有这个限制
   // 所以 autoRun 的值在递归里不会变，取消动画搬到了 useEffect 中
   const anim = useCallback(
     (time: number = 0) => {
       try {
-        draw(gl.current, props.vertexSource, props.fragmentSource, image, time);
+        draw(gl.current, props.vertexSource, props.fragmentSource, image, time, clickPosition);
         setError("");
       } catch (e: any) {
         setError(e.message);
@@ -103,7 +123,7 @@ function ZCanvas(props: IZCanvas) {
         animRef.current = window.requestAnimationFrame(anim);
       }
     },
-    [props.vertexSource, props.fragmentSource, image]
+    [props.vertexSource, props.fragmentSource, image, clickPosition]
   );
 
   // init
@@ -148,10 +168,11 @@ function ZCanvas(props: IZCanvas) {
 
   return (
     <Grid.Container direction="column">
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center", height: "50vh", width: "100%" }} ref={canvasWrapperRef}>
         <canvas
           ref={canvasRef}
-          style={{ height: "50vh", width: "100%", objectFit: "contain" }}
+          style={{ objectFit: "contain" }}
+          onClick={onCanvasClick}
         ></canvas>
       </div>
       <Divider />

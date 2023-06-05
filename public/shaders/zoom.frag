@@ -1,10 +1,11 @@
+/* 2023-06-05 测试写一个带放大镜的图片 （像产品介绍图中常见的）*/
 #ifdef GL_ES
 precision mediump float;
 #endif
 varying lowp vec2 vTexCoord;
 uniform sampler2D uSampler;
 uniform vec2 uResolution;
-uniform float uTime;
+uniform vec2 uMouseClick;
 
 vec4 circle(vec2 st, vec2 pos, vec2 center, float radius,float border,float factor, vec4 color, vec4 bottom, float antialias) {
     float d = length((pos - center)*st) - radius; //大于1在圆外，小于1在圆内
@@ -19,7 +20,7 @@ vec4 circle(vec2 st, vec2 pos, vec2 center, float radius,float border,float fact
 
 void main(){
     // 放大镜的中心点
-    vec2 zoom_center = vec2(noise(uTime*0.1),noise(uTime));
+    vec2 zoom_center = uMouseClick;
   	// 放大镜的半径
     float zoom_r = 0.1;
     // 放大镜的边框颜色
@@ -27,11 +28,12 @@ void main(){
     // 边框柔和度
     float zoom_antialias = 0.002;
     // 边框宽度
-    float zoom_border = 0.003;
-    // 放大镜倍数
+    float zoom_border = 0.006;
+    // 放大镜倍数(越小越大)
     float zoom_factor = 0.5;
 
-  	vec4 color =  texture2D(uSampler,vTexCoord);
+    // 基础
+    vec4 color =  texture2D(uSampler,vTexCoord);
     vec2 st = vec2(1,uResolution.y/uResolution.x);
   
     color = circle(st,vTexCoord,zoom_center,zoom_r,zoom_border,zoom_factor,zoom_color,color,zoom_antialias);

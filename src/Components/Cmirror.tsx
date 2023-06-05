@@ -30,7 +30,7 @@ export default function Cmirror(props: ICmirror) {
       case ("Tokyo Night Storm"):
         return tokyoNightStorm
       default:
-        return nord
+        return tokyoNightStorm
     }
   }
 

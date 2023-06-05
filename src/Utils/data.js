@@ -57,4 +57,10 @@ export const note = [
     name: "uTime",
     description: "Shader 运行的时间（秒）",
   },
+  {
+    attribute:"uniform",
+    type:"vec2",
+    name:"uMouseClick",
+    description:"鼠标点击的位置"
+  }
 ];

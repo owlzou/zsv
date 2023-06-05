@@ -9,7 +9,7 @@ interface ISettingsProp {
   onChange: (a: ISettings) => void;
 }
 
-export const defaultSettings = { cmTheme: "3024-day", theme: "light" };
+export const defaultSettings = { cmTheme: "Tokyo Night Storm", theme: "light" };
 
 const Settings = (props: ISettingsProp) => {
   const SetCodeMirrorTheme = () => {

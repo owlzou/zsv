@@ -109,7 +109,7 @@ export function bindTexture(gl, shaderProgram, image) {
   gl.uniform1i(gl.getUniformLocation(shaderProgram, "uSampler"), 0);
 }
 
-export function draw(gl, vertexSource, fragmentSource, image, uTime = 0) {
+export function draw(gl, vertexSource, fragmentSource, image, uTime = 0, uMouseClick = [0.5, 0.5]) {
   //正方形
   const vertices = [-1, -1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0];
   //纹理对应坐标
@@ -122,7 +122,7 @@ export function draw(gl, vertexSource, fragmentSource, image, uTime = 0) {
   simpleBindBuffer(gl, shaderProgram, "aPosition", vertices, 3, 0, 0);
   simpleBindBuffer(gl, shaderProgram, "aTexCoord", tex, 2, 0, 0);
   gl.useProgram(shaderProgram);
-  //未来添加其他可以绑定的参数也在这里：
+  //-----------------------未来添加其他可以绑定的参数也在这里-----------------------
   // - canvas 的大小
   gl.uniform2f(
     gl.getUniformLocation(shaderProgram, "uResolution"),
@@ -131,6 +131,9 @@ export function draw(gl, vertexSource, fragmentSource, image, uTime = 0) {
   );
   // - 运行时间
   gl.uniform1f(gl.getUniformLocation(shaderProgram, "uTime"), uTime / 1000);
+  // - 鼠标点击位置
+  gl.uniform2f(gl.getUniformLocation(shaderProgram, "uMouseClick"), uMouseClick[0],uMouseClick[1]);
+  //-----------------------添加参数位置结束-----------------------
   bindTexture(gl, shaderProgram, image);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
