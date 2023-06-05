@@ -1,0 +1,44 @@
+:root {
+  --nav-height: 60px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+}
+
+.App {
+  padding: 16px 32px;
+}
+
+.control {
+  margin: 0 auto;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+}
+
+.row>* {
+  margin-right: 16px !important;
+}
+
+/* CodeMirror 用 */
+[class^=cm-theme],
+.cm-editor {
+  height: 100% !important;
+}
+
+.tabs .content {
+  height: calc(100vh - 124px);
+}
+
+/* CodeMirror 结束 */
