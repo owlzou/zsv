@@ -29,6 +29,7 @@ function RGB2Vec() {
   return (
     <div className="row">
       <Text>HEX 转 vec3</Text>
+      <input type="color" value={rgbInput} onChange={(e)=>{setRgbInput(e.target.value)}}/>
       <Input
         value={rgbInput}
         placeholder="#79FFE1"

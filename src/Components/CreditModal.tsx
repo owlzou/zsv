@@ -29,7 +29,7 @@ function CreditModal(props: IModal) {
             </a>
           </li>
           <li>
-            <a href="https://github.com/geist-org/react" target="_blank">geist-ui</a>
+            <a href="https://geist-ui.dev" target="_blank">geist-ui</a>
           </li>
         </ul>
         <p>APP中使用的默认图片来自于Unsplash：</p>

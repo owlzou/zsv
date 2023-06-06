@@ -61,6 +61,6 @@ export const note = [
     attribute:"uniform",
     type:"vec2",
     name:"uMouseClick",
-    description:"鼠标点击的位置"
+    description:"鼠标点击的坐标"
   }
 ];

@@ -22,13 +22,23 @@ body {
   margin-bottom: 20px;
 }
 
+/* Tool 下用 */
 .row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
 }
 
 .row>* {
-  margin-right: 16px !important;
+  margin-right: 8px !important;
+}
+
+/* Canvas 下控制图标用 */
+.ui-button-group {
+  text-align: center;
+}
+
+.ui-button-group>button {
+  margin-right: 8px !important;
 }
 
 /* CodeMirror 用 */
