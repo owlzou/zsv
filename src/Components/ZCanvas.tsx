@@ -197,7 +197,7 @@ function ZCanvas(props: IZCanvas) {
         <div className="ui-button-group" >
           <Button auto title={autoRun ? "暂停动画" : "播放动画"} icon={autoRun ? <Pause /> : <Play />} onClick={(_e) => setAutoRun(!autoRun)} type="secondary">{autoRun ? "暂停动画" : "播放动画"}</Button>
           <Button auto title="停止动画" icon={<StopCircle />} onClick={(_e) => stopAnim()}>停止动画</Button>
-          <Button auto title="选择图片" icon={<ImageIcon />}> <Popover content={selectImageContent}>选择图片</Popover></Button>
+          <Button auto title="选择图片" icon={<ImageIcon />}> <Popover content={selectImageContent as any}>选择图片</Popover></Button>
           <Button auto title="上传图片" icon={<Upload />} onClick={uploadImage}>上传图片</Button>
           <Button auto title="下载图片" icon={<Download />} onClick={downloadImage}>下载图片</Button>
         </div>

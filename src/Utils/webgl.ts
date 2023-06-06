@@ -86,10 +86,10 @@ export function simpleBindBuffer(
  *
  * @param {WebGLRenderingContext} gl - gl上下文
  * @param {WebGLProgram} shaderProgram - shaderProgram
- * @param {TexImageSource} image - 图片元素
+ * @param {HTMLImageElement} image - 图片元素
  * @returns
  */
-export function bindTexture(gl: WebGLRenderingContext, shaderProgram: WebGLProgram, image: TexImageSource) {
+export function bindTexture(gl: WebGLRenderingContext, shaderProgram: WebGLProgram, image: HTMLImageElement) {
   let texture = gl.createTexture();
   //绑定纹理
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -116,11 +116,11 @@ export function bindTexture(gl: WebGLRenderingContext, shaderProgram: WebGLProgr
  * @param {WebGLRenderingContext} gl
  * @param {string} vertexSource
  * @param {string} fragmentSource
- * @param {TexImageSource} image
+ * @param {HTMLImageElement} image
  * @param {number} [uTime=0] 经过时间
  * @param {number[]} [uMouseClick=[0.5, 0.5]] 鼠标点击位置
  */
-export function draw(gl: WebGLRenderingContext, vertexSource: string, fragmentSource: string, image: TexImageSource, uTime = 0, uMouseClick = [0.5, 0.5]) {
+export function draw(gl: WebGLRenderingContext, vertexSource: string, fragmentSource: string, image: HTMLImageElement, uTime = 0, uMouseClick = [0.5, 0.5]) {
   //正方形
   const vertices = [-1, -1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0];
   //纹理对应坐标
